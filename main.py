@@ -1,6 +1,7 @@
 import socket
 import logging
 import threading
+import json
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -16,9 +17,15 @@ def handle_client(client_socket, client_address):
             if not data:
                 break
 
-            # Log the received data
-            logger.info(f"Received data from {client_address}: {data.decode('utf-8').strip()}")
+            # Decode the received data as JSON
+            try:
+                json_data = json.loads(data.decode('utf-8'))
+            except json.JSONDecodeError as e:
+                logger.error(f"Error decoding JSON data from {client_address}: {e}")
+                continue
 
+            # Log the received JSON data
+            logger.info(f"Received JSON data from {client_address}:\n{json.dumps(json_data, indent=4)}")
 
             # Send a response back to the client (optional)
             # client_socket.send(b"Data received")
@@ -57,7 +64,7 @@ def start_tcp_server(host, port):
         server_socket.close()
 
 if __name__ == "__main__":
-    host = "0.0.0.0"  # Change to your desired host
-    port = 8080  # Change to your desired port
+    host = "0.0.0.0"  # Listen on all available network interfaces
+    port = 8080  # Use port 8080
 
     start_tcp_server(host, port)
