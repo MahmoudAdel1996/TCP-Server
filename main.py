@@ -61,7 +61,7 @@ def start_tcp_server(host, port):
         server_socket.close()
 
 if __name__ == "__main__":
-    host = "127.0.0.1"  # Change to your desired host
+    host = "0.0.0.0"  # Change to your desired host
     port = 8080  # Change to your desired port
 
     start_tcp_server(host, port)
