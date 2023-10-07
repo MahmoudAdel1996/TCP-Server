@@ -10,12 +10,11 @@ def start_server(host, port):
             client_socket, client_address = server_socket.accept()
             try:
                 client_socket.settimeout(25)  # Set a 25-second timeout for receiving data
-                while True:
-                    data = client_socket.recv(1024)
-                    if not data:
-                        break
-                    print(f"Received data from {client_address}: {data.decode('utf-8')}")
-                    sys.stdout.flush()
+                data = client_socket.recv(1024)
+                if not data:
+                    break
+                print(f"Received data from {client_address}: {data.decode('utf-8')}")
+                sys.stdout.flush()
             except socket.timeout:
                 print(f"No data received from {client_address} within 5 seconds. Closing connection.")
                 sys.stdout.flush()
