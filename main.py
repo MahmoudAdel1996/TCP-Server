@@ -9,19 +9,19 @@ def start_server(host, port):
         while True:
             client_socket, client_address = server_socket.accept()
             try:
-                client_socket.settimeout(10)  # Set a 10-second timeout for receiving data
                 data = client_socket.recv(1024)
                 if not data:
                     break
                 print(f"Received data from {client_address}: {data.decode('utf-8')}")
-            except socket.timeout:
-                print(f"No data received from {client_address} within 5 seconds. Closing connection.")
+                sys.stdout.flush()  # Force flushing the standard output
             except Exception as e:
                 print(f"Error handling client {client_address}: {e}")
+                sys.stdout.flush()
             finally:
                 client_socket.close()
     except Exception as e:
         print(f"Error starting server: {e}")
+        sys.stdout.flush()
     finally:
         server_socket.close()
 
@@ -32,6 +32,8 @@ if __name__ == "__main__":
         start_server(host, port)
     except KeyboardInterrupt:
         print("\nServer terminated by user.")
+        sys.stdout.flush()
         sys.exit(0)
     except Exception as e:
         print(f"Server error: {e}")
+        sys.stdout.flush()
