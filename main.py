@@ -17,15 +17,8 @@ def handle_client(client_socket, client_address):
             if not data:
                 break
 
-            # Decode the received data as JSON
-            try:
-                json_data = json.loads(data.decode('utf-8'))
-            except json.JSONDecodeError as e:
-                logger.error(f"Error decoding JSON data from {client_address}: {e}")
-                continue
-
-            # Log the received JSON data
-            logger.info(f"Received JSON data from {client_address}:\n{json.dumps(json_data, indent=4)}")
+            # Log the received data
+            logger.info(f"Received data from {client_address}: {data.decode('utf-8').strip()}")
 
             # Send a response back to the client (optional)
             # client_socket.send(b"Data received")
