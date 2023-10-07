@@ -16,13 +16,9 @@ def handle_client(client_socket, client_address):
             if not data:
                 break
 
-            # Decode the received data and split it into headers and body
-            data_str = data.decode('utf-8')
-            headers, body = data_str.split('\r\n\r\n', 1)
+            # Log the received data
+            logger.info(f"Received data from {client_address}: {data.decode('utf-8').strip()}")
 
-            # Log the headers and the received data
-            logger.info(f"Received headers from {client_address}:\n{headers}")
-            logger.info(f"Received data from {client_address}:\n{body}")
 
             # Send a response back to the client (optional)
             # client_socket.send(b"Data received")
