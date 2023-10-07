@@ -18,11 +18,12 @@ def start_server(host, port):
             except socket.timeout:
                 print(f"No data received from {client_address} within 25 seconds. Closing connection.")
                 sys.stdout.flush()
+                client_socket.close()
             except Exception as e:
                 print(f"Error handling client {client_address}: {e}")
                 sys.stdout.flush()
-            finally:
                 client_socket.close()
+                
     except Exception as e:
         print(f"Error starting server: {e}")
         sys.stdout.flush()
