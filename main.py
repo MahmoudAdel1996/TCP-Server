@@ -62,6 +62,6 @@ def start_tcp_server(host, port):
 
 if __name__ == "__main__":
     host = "127.0.0.1"  # Change to your desired host
-    port = 8888  # Change to your desired port
+    port = 8080  # Change to your desired port
 
     start_tcp_server(host, port)
