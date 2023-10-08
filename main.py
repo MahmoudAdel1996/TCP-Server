@@ -2,8 +2,12 @@ import socket
 import sys
 import threading
 
+
+CLIENT_SOCKET_TIMEOUT = 25
+
 def handle_client(client_socket, client_address):
     try:
+        client_socket.settimeout(CLIENT_SOCKET_TIMEOUT)
         while True:
             data = client_socket.recv(1024)
             if not data:
@@ -11,12 +15,16 @@ def handle_client(client_socket, client_address):
             print(f"Received data from {client_address}: {data.decode('utf-8')}")
             sys.stdout.flush()
             
-            # Continue listening for the next message
+    except socket.timeout:
+        print(f"Client connection timed out ({CLIENT_SOCKET_TIMEOUT} seconds)")
+        sys.stdout.flush()
     except Exception as e:
         print(f"Error handling client {client_address}: {e}")
+        sys.stdout.flush()
     finally:
         client_socket.close()
         print(f"Connection with {client_address} closed.")
+        sys.stdout.flush()
 
 def start_server(host, port):
     try:
@@ -24,11 +32,11 @@ def start_server(host, port):
         server_socket.bind((host, port))
         server_socket.listen(5)
         print(f"Server listening on {host}:{port}")
-
+        sys.stdout.flush()
         while True:
             client_socket, client_address = server_socket.accept()
             print(f"Accepted connection from {client_address}")
-            
+            sys.stdout.flush()
             client_thread = threading.Thread(target=handle_client, args=(client_socket, client_address))
             client_thread.start()
     except Exception as e:
