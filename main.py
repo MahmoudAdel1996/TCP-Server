@@ -10,6 +10,8 @@ def handle_client(client_socket, client_address):
         # client_socket.settimeout(CLIENT_SOCKET_TIMEOUT)
         while True:
             data = client_socket.recv(1024 * 1024)
+            if not data:
+                continue
             print(f"Received data from {client_address}: {data.decode('utf-8')}")
             sys.stdout.flush()
             ack_message = "Data received and processed successfully."
