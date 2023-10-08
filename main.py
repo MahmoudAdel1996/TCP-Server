@@ -11,7 +11,8 @@ def handle_client(client_socket, client_address):
         while True:
             data = client_socket.recv(1024 * 1024)
             if not data:
-                break
+                print("empty data sent")
+                sys.stdout.flush()
             print(f"Received data from {client_address}: {data.decode('utf-8')}")
             sys.stdout.flush()
             ack_message = "Data received and processed successfully."
