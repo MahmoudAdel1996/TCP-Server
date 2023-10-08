@@ -3,21 +3,23 @@ import sys
 import threading
 
 
-CLIENT_SOCKET_TIMEOUT = 25
+# CLIENT_SOCKET_TIMEOUT = 25
 
 def handle_client(client_socket, client_address):
     try:
-        client_socket.settimeout(CLIENT_SOCKET_TIMEOUT)
+        # client_socket.settimeout(CLIENT_SOCKET_TIMEOUT)
         while True:
             data = client_socket.recv(1024 * 1024)
             if not data:
                 break
             print(f"Received data from {client_address}: {data.decode('utf-8')}")
             sys.stdout.flush()
+            ack_message = "Data received and processed successfully."
+            client_socket.send(ack_message.encode('utf-8'))
             
-    except socket.timeout:
-        print(f"Client connection timed out ({CLIENT_SOCKET_TIMEOUT} seconds)")
-        sys.stdout.flush()
+    # except socket.timeout:
+    #     print(f"Client connection timed out ({CLIENT_SOCKET_TIMEOUT} seconds)")
+    #     sys.stdout.flush()
     except Exception as e:
         print(f"Error handling client {client_address}: {e}")
         sys.stdout.flush()
