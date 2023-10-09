@@ -11,15 +11,24 @@ def handle_client(client_socket, client_address):
         while True:
             data = client_socket.recv(1024 * 1024)
             if not data:
-                continue
-            print(f"Received data from {client_address}: {data.decode('utf-8')}")
+                break
+            try:
+                decoded_data = data.decode('utf-8')
+                print(f"Received data from {client_address}: {decoded_data}")
+            except UnicodeDecodeError:
+                # Handle decoding errors (e.g., logging, skipping, or converting to another encoding)
+                print(f"Error decoding data from {client_address}")
             sys.stdout.flush()
-            ack_message = "Data received and processed successfully."
+
+            ack_message = "Data received and processed successfully.\n"
             client_socket.send(ack_message.encode('utf-8'))
-            
-    # except socket.timeout:
-    #     print(f"Client connection timed out ({CLIENT_SOCKET_TIMEOUT} seconds)")
-    #     sys.stdout.flush()
+
+    except ConnectionResetError:
+        print(f"Connection reset by {client_address}")
+        sys.stdout.flush()  
+    except socket.timeout:
+        print(f"Client connection timed out")
+        sys.stdout.flush()
     except Exception as e:
         print(f"Error handling client {client_address}: {e}")
         sys.stdout.flush()
