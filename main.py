@@ -1,14 +1,13 @@
 import socket
 import sys
-import asyncio
 
 CLIENT_SOCKET_TIMEOUT = 60
 
-async def handle_client(client_socket, client_address):
+def handle_client(client_socket, client_address):
     try:
         client_socket.settimeout(CLIENT_SOCKET_TIMEOUT)
         while True:
-            data = await loop.sock_recv(client_socket, 4096)
+            data = client_socket.recv(1024)
             if not data:
                 break
             try:
@@ -19,7 +18,7 @@ async def handle_client(client_socket, client_address):
             sys.stdout.flush()
 
             ack_message = "Data received and processed successfully.\n"
-            await loop.sock_sendall(client_socket, ack_message.encode('utf-8'))
+            client_socket.send(ack_message.encode('utf-8'))
 
     except ConnectionResetError:
         print(f"Connection reset by {client_address}")
@@ -35,7 +34,7 @@ async def handle_client(client_socket, client_address):
         print(f"Connection with {client_address} closed.")
         sys.stdout.flush()
 
-async def start_server(host, port):
+def start_server(host, port):
     try:
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server_socket.bind((host, port))
@@ -46,7 +45,7 @@ async def start_server(host, port):
             client_socket, client_address = server_socket.accept()
             print(f"Accepted connection from {client_address}")
             sys.stdout.flush()
-            await loop.run_in_executor(None, handle_client, client_socket, client_address)
+            handle_client(client_socket, client_address)
     except Exception as e:
         print(f"Error starting server: {e}")
         sys.stdout.flush()
@@ -56,15 +55,12 @@ async def start_server(host, port):
 if __name__ == "__main__":
     host = "0.0.0.0"
     port = 8080
-    loop = asyncio.get_event_loop()
     try:
-        loop.run_until_complete(start_server(host, port))
+        start_server(host, port)
     except KeyboardInterrupt:
         print("\nServer terminated by user.")
         sys.stdout.flush()
-        loop.run_until_complete(loop.shutdown_asyncgens())
+        sys.exit(0)
     except Exception as e:
         print(f"Server error: {e}")
         sys.stdout.flush()
-    finally:
-        loop.close()
