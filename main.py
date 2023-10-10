@@ -7,7 +7,7 @@ def handle_client(client_socket, client_address):
     try:
         client_socket.settimeout(CLIENT_SOCKET_TIMEOUT)
         while True:
-            data = client_socket.recv(1024)
+            data = client_socket.recv(1024 * 1024)
             if not data:
                 break
             try:
