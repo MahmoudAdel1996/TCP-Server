@@ -2,7 +2,7 @@ import socket
 import sys
 import threading
 
-CLIENT_SOCKET_TIMEOUT = 60
+CLIENT_SOCKET_TIMEOUT = 900 # 15 Min
 BUFFER_SIZE = 4096
 
 # Lock for protecting shared resources (if any)
